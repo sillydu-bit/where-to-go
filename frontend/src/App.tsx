@@ -169,36 +169,50 @@ interface UserData {
 
 const CATEGORIES = ['все', 'концерт', 'выставка', 'кино', 'мастер-класс', 'прогулка']
 
-// Простая модалка входа/регистрации
 function AuthModal({ onClose, onAuth }: { onClose: () => void; onAuth: (user: UserData) => void }) {
   const [isLogin, setIsLogin] = useState(true)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    setLoading(true)
 
-    try {
-      const endpoint = isLogin ? '/api/v1/auth/login' : '/api/v1/auth/register'
-      const res = await fetch(`http://localhost:8000${endpoint}?username=${username}&password=${password}`, {
-        method: 'POST',
-      })
-      const data = await res.json()
-      
-      if (!res.ok) {
-        setError(data.detail || 'Ошибка')
+    // Получаем всех пользователей из localStorage
+    const users = JSON.parse(localStorage.getItem('users') || '[]')
+
+    if (isLogin) {
+      // ВХОД: ищем пользователя
+      const user = users.find((u: any) => u.username === username && u.password === password)
+      if (!user) {
+        setError('Неверное имя пользователя или пароль')
+        return
+      }
+      onAuth({ id: user.id, username: user.username })
+    } else {
+      // РЕГИСТРАЦИЯ: проверяем, есть ли уже такой пользователь
+      const exists = users.find((u: any) => u.username === username)
+      if (exists) {
+        setError('Пользователь с таким именем уже существует')
+        return
+      }
+      if (password.length < 4) {
+        setError('Пароль должен быть не менее 4 символов')
         return
       }
 
-      onAuth(data)
-    } catch (err) {
-      setError('Ошибка сети')
-    } finally {
-      setLoading(false)
+      // Создаём нового пользователя
+      const newUser = {
+        id: Date.now(), // уникальный ID
+        username: username,
+        password: password
+      }
+      users.push(newUser)
+      localStorage.setItem('users', JSON.stringify(users))
+      
+      // Автоматически входим
+      onAuth({ id: newUser.id, username: newUser.username })
     }
   }
 
@@ -247,10 +261,9 @@ function AuthModal({ onClose, onAuth }: { onClose: () => void; onAuth: (user: Us
 
           <button
             type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition disabled:opacity-50"
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition"
           >
-            {loading ? 'Загрузка...' : (isLogin ? 'Войти' : 'Зарегистрироваться')}
+            {isLogin ? 'Войти' : 'Зарегистрироваться'}
           </button>
         </form>
 
@@ -369,17 +382,17 @@ useEffect(() => {
   const center = selectedEvent ? [selectedEvent.lat || 55.7558, selectedEvent.lng || 37.6173] : [55.7558, 37.6173]
   const hasActiveFilters = selectedCategory !== 'все' || searchQuery !== '' || dateFilter !== 'all' || showFavoritesOnly
 
-  const openPaymentModal = (event: Event) => {
-    if (!user) {
-      setShowAuthModal(true)
-      return
-    }
-    setPaymentEvent(event)
-    setShowPaymentModal(true)
-    setPaymentStatus('idle')
-    setPaymentForm({ fullName: user.username, phone: '', card: '' })
-    setFormErrors({})
+const openPaymentModal = (event: Event) => {
+  if (!user) {
+    setShowAuthModal(true)
+    return
   }
+  setPaymentEvent(event)
+  setShowPaymentModal(true)
+  setPaymentStatus('idle')
+  setPaymentForm({ fullName: user.username, phone: '', card: '' })
+  setFormErrors({})
+}
 
   const handlePaymentSubmit = (e: React.FormEvent) => {
     e.preventDefault()
