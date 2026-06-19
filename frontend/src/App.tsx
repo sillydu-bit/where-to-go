@@ -28,6 +28,140 @@ interface Event {
   source_url: string | null;
 }
 
+// Моковые данные для демонстрации
+const MOCK_EVENTS: Event[] = [
+  {
+    id: 1,
+    title: "Концерт рок-группы",
+    description: "Живая музыка, каверы на известные хиты. Не пропустите!",
+    start_at: new Date(Date.now() + 86400000).toISOString(),
+    end_at: new Date(Date.now() + 97200000).toISOString(),
+    lat: 55.7558,
+    lng: 37.6173,
+    address: "Москва, ул. Примерная, 10 (Центр)",
+    category: "концерт",
+    price: "500₽",
+    source_url: "https://example.com"
+  },
+  {
+    id: 2,
+    title: "Выставка современного искусства",
+    description: "Работы молодых художников. Уникальная возможность!",
+    start_at: new Date().toISOString(),
+    end_at: new Date(Date.now() + 36000000).toISOString(),
+    lat: 55.7602,
+    lng: 37.6186,
+    address: "Москва, Красная площадь, 1 (Центр)",
+    category: "выставка",
+    price: "Бесплатно",
+    source_url: "https://example.com"
+  },
+  {
+    id: 3,
+    title: "Кинопоказ: Новый фильм",
+    description: "Премьера года. Блокбастер, который все ждали!",
+    start_at: new Date(Date.now() + 172800000).toISOString(),
+    end_at: new Date(Date.now() + 180000000).toISOString(),
+    lat: 55.7512,
+    lng: 37.6156,
+    address: "Москва, кинотеатр Октябрь (Центр)",
+    category: "кино",
+    price: "350₽",
+    source_url: "https://example.com"
+  },
+  {
+    id: 4,
+    title: "Джазовый вечер в Сокольниках",
+    description: "Камерный концерт джазового квартета.",
+    start_at: new Date(Date.now() + 259200000).toISOString(),
+    end_at: new Date(Date.now() + 266400000).toISOString(),
+    lat: 55.7827,
+    lng: 37.6778,
+    address: "Москва, Сокольнический вал, 1 (Сокольники)",
+    category: "концерт",
+    price: "800₽",
+    source_url: "https://example.com"
+  },
+  {
+    id: 5,
+    title: "Фестиваль уличной еды",
+    description: "Более 30 корнеров с едой со всего мира.",
+    start_at: new Date(Date.now() + 432000000).toISOString(),
+    end_at: new Date(Date.now() + 475200000).toISOString(),
+    lat: 55.6447,
+    lng: 37.5458,
+    address: "Москва, парк 60-летия Октября (Южное Бутово)",
+    category: "прогулка",
+    price: "Бесплатно",
+    source_url: "https://example.com"
+  },
+  {
+    id: 6,
+    title: "Стендап-шоу",
+    description: "Выступление известных комиков. Смех гарантирован!",
+    start_at: new Date(Date.now() + 345600000).toISOString(),
+    end_at: new Date(Date.now() + 352800000).toISOString(),
+    lat: 55.7961,
+    lng: 37.3706,
+    address: "Москва, Митинская ул., 32 (Митино)",
+    category: "концерт",
+    price: "1200₽",
+    source_url: "https://example.com"
+  },
+  {
+    id: 7,
+    title: "Выставка ретро-автомобилей",
+    description: "Коллекция автомобилей 60-80х годов.",
+    start_at: new Date(Date.now() + 518400000).toISOString(),
+    end_at: new Date(Date.now() + 554400000).toISOString(),
+    lat: 55.8194,
+    lng: 37.6247,
+    address: "Москва, ВДНХ, павильон 75 (Останкино)",
+    category: "выставка",
+    price: "300₽",
+    source_url: "https://example.com"
+  },
+  {
+    id: 8,
+    title: "Мастер-класс по гончарному делу",
+    description: "Научитесь работать на гончарном круге.",
+    start_at: new Date(Date.now() + 604800000).toISOString(),
+    end_at: new Date(Date.now() + 615600000).toISOString(),
+    lat: 55.7308,
+    lng: 37.6669,
+    address: "Москва, ул. Таганская, 45 (Таганка)",
+    category: "мастер-класс",
+    price: "2000₽",
+    source_url: "https://example.com"
+  },
+  {
+    id: 9,
+    title: "Ночная велопрогулка",
+    description: "Прокатимся по ночной Москве! Маршрут 15 км.",
+    start_at: new Date(Date.now() + 172800000).toISOString(),
+    end_at: new Date(Date.now() + 180000000).toISOString(),
+    lat: 55.7031,
+    lng: 37.6756,
+    address: "Москва, парк Коломенское (ЮАО)",
+    category: "прогулка",
+    price: "600₽",
+    source_url: "https://example.com"
+  },
+  {
+    id: 10,
+    title: "Арт-вечеринка в Хохловке",
+    description: "Альтернативное искусство, перформансы, DJ-сеты. 18+",
+    start_at: new Date(Date.now() + 691200000).toISOString(),
+    end_at: new Date(Date.now() + 705600000).toISOString(),
+    lat: 55.7527,
+    lng: 37.6456,
+    address: "Москва, Хохловский пер., 7-9 (Покровка)",
+    category: "выставка",
+    price: "500₽",
+    source_url: "https://example.com"
+  }
+]
+
 interface UserData {
   id: number;
   username: string;
@@ -190,12 +324,21 @@ function App() {
 
   const cardRefs = useRef<Record<number, HTMLDivElement>>({})
 
-  useEffect(() => {
-    fetch('http://localhost:8000/api/v1/events')
-      .then(res => res.json())
-      .then(data => { setEvents(data); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
+useEffect(() => {
+  // Пробуем загрузить с бэкенда
+  fetch('http://localhost:8000/api/v1/events')
+    .then(res => res.json())
+    .then(data => {
+      setEvents(data)
+      setLoading(false)
+    })
+    .catch(() => {
+      // Если бэкенд недоступен — используем моковые данные
+      console.log('Backend unavailable, using mock data')
+      setEvents(MOCK_EVENTS)
+      setLoading(false)
+    })
+}, [])
 
   const filteredEvents = events.filter(event => {
     if (selectedCategory !== 'все' && event.category !== selectedCategory) return false
