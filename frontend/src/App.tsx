@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { MapPin, Calendar, ExternalLink, Loader2, Filter, X, Moon, Sun, CreditCard, User, Phone, CheckCircle, ShieldCheck, Heart, LogIn, LogOut } from 'lucide-react'
+import { MapPin, Calendar, ExternalLink, Loader2, Filter, X, Moon, Sun, CreditCard, User, Phone, CheckCircle, Heart, LogIn, LogOut } from 'lucide-react'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import icon from 'leaflet/dist/images/marker-icon.png'
